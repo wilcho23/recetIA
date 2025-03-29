@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Generador de Recetas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Sube una imagen de ingredientes</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="imagen" accept="image/*" required>
+        <button type="submit">Analizar Imagen</button>
+    </form>
+
+    {% if receta %}
+        <div class="resultado">
+            <h2>Receta Generada</h2>
+            <pre>{{ receta }}</pre>
+        </div>
+    {% endif %}
+</body>
+</html>
