@@ -17,25 +17,27 @@ ingredientes = [
     "brócoli", "coliflor", "limón", "aceite", "sal", "pasta", "berenjena"
 ]
 
-# Cargar modelo CLIP
+# Cargar modelo CLIP y su procesador
 model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
 processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 
 def analizar_imagen(ruta_imagen, idioma='es', modo='chef'):
-    # Detectar ingredientes con CLIP
+    # Abrir la imagen y convertirla a RGB
     image = Image.open(ruta_imagen).convert("RGB")
+    # Procesar la imagen junto con la lista de ingredientes para obtener los embeddings
     inputs = processor(text=ingredientes, images=image, return_tensors="pt", padding=True)
     outputs = model(**inputs)
     logits_per_image = outputs.logits_per_image
     probs = logits_per_image.softmax(dim=1)
 
+    # Determinar qué ingredientes se detectaron con probabilidad alta (> 0.1)
     prob_values = probs[0].detach().numpy()
     ingredientes_detectados = [ingredientes[i] for i, p in enumerate(prob_values) if p > 0.1]
 
     if not ingredientes_detectados:
         return "No se detectaron ingredientes con suficiente confianza."
 
-    # Construir prompt según idioma y modo
+    # Construir el prompt para OpenAI a partir de los ingredientes detectados
     ingredientes_txt = ', '.join(ingredientes_detectados)
 
     if idioma == 'es':
@@ -69,7 +71,7 @@ def analizar_imagen(ruta_imagen, idioma='es', modo='chef'):
         else:
             prompt += "Faça uma receita simples e rápida, pronta em menos de 20 minutos."
 
-    # Llamada a OpenAI GPT
+    # Llamada a la API de OpenAI GPT-3.5-turbo para generar la receta
     try:
         respuesta = client.chat.completions.create(
             model="gpt-3.5-turbo",
@@ -80,3 +82,4 @@ def analizar_imagen(ruta_imagen, idioma='es', modo='chef'):
         return respuesta.choices[0].message.content.strip()
     except Exception as e:
         return f"❌ Error al generar receta con GPT: {str(e)}"
+
