@@ -25,6 +25,7 @@ def index():
             # Obtiene los parámetros de idioma y modo (con valores por defecto)
             idioma = request.form.get('idioma', 'es')
             modo = request.form.get('modo', 'chef')
+
             filename = secure_filename(archivo.filename)
             path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             archivo.save(path)
@@ -32,13 +33,16 @@ def index():
             # Procesar imagen y obtener la receta
             receta = analizar_imagen(path, idioma, modo)
 
-            # Separar receta en secciones: Ingredientes y Pasos de preparación
+            # Separar la receta en secciones: Ingredientes y Pasos de preparación
             ingredientes_match = re.search(r'Ingredientes:([\s\S]*?)Pasos de preparación:', receta, re.IGNORECASE)
             pasos_match = re.search(r'Pasos de preparación:([\s\S]*)', receta, re.IGNORECASE)
+
             if ingredientes_match:
                 ingredientes = ingredientes_match.group(1).strip().split('\n')
+
             if pasos_match:
                 raw_pasos = pasos_match.group(1).strip().split('\n')
+                # Elimina números al inicio y espacios en blanco
                 pasos = [re.sub(r'^\d+\.\s*', '', paso).strip() for paso in raw_pasos if paso.strip()]
 
     return render_template('index.html', receta=receta, ingredientes=ingredientes, pasos=pasos)
@@ -46,4 +50,3 @@ def index():
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
-

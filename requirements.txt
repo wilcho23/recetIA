@@ -1,8 +1,4 @@
-flask
-openai
 transformers
 torch
 pillow
-python-dotenv
 gunicorn
-
