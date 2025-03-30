@@ -1,0 +1,15 @@
+# Ignorar entorno virtual
+venv/
+
+# Archivos temporales de Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos sensibles
+.env
+

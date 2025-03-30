@@ -1,4 +1,106 @@
 body {
+<<<<<<< HEAD
+    margin: 0;
+    background: #fef9f4;
+    font-family: 'Fredoka', sans-serif;
+    color: #333;
+}
+
+.main-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    font-size: 48px;
+    color: #ff7b54;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 18px;
+    color: #444;
+}
+
+form {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.custom-file {
+    background: #fff3cd;
+    border: 2px dashed #ffc107;
+    padding: 20px;
+    display: inline-block;
+    border-radius: 12px;
+    font-size: 18px;
+    cursor: pointer;
+    position: relative;
+    color: #ff8800;
+}
+
+.custom-file input {
+    display: none;
+}
+
+button {
+    margin-top: 15px;
+    background-color: #00b894;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #00997a;
+}
+
+.preview-area {
+    text-align: center;
+}
+
+#image-preview {
+    max-width: 100%;
+    margin-top: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.1);
+}
+
+.recipe-card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+    margin-top: 40px;
+}
+
+.recipe-card h2 {
+    margin-top: 0;
+    color: #ff6363;
+}
+
+.recipe-card pre {
+    white-space: pre-wrap;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+footer {
+    text-align: center;
+    margin-top: 60px;
+    font-size: 14px;
+    color: #aaa;
+=======
     font-family: Arial, sans-serif;
     text-align: center;
     margin-top: 50px;
@@ -24,4 +126,5 @@ button {
     margin-right: auto;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+>>>>>>> 81b10f6cdb95270b893c743a07fb7f908983890d
 }

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>RecetIA 🍳</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Librerías PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="main-container">
+        <header>
+            <h1>🍽️ RecetIA</h1>
+            <p>Sube una imagen de ingredientes y deja que la IA cocine por ti 🍅🥬🧄</p>
+        </header>
+
+        <form method="POST" enctype="multipart/form-data" id="upload-form">
+            <label for="file-input" class="custom-file">
+                📸 Selecciona una imagen
+                <input type="file" name="imagen" accept="image/*" id="file-input" required>
+            </label>
+
+            <div class="form-options">
+                <label for="idioma">🌍 Idioma:</label>
+                <select name="idioma" id="idioma">
+                    <option value="es">Español</option>
+                    <option value="en">English</option>
+                    <option value="pt">Português</option>
+                </select>
+            </div>
+
+            <div class="form-options">
+                <label for="modo">👩‍🍳 Modo:</label>
+                <select name="modo" id="modo">
+                    <option value="chef">Chef (Gourmet)</option>
+                    <option value="rapido">Rápido (Express)</option>
+                </select>
+            </div>
+
+            <button type="submit">🧠 Generar receta</button>
+        </form>
+
+        <div class="preview-area">
+            <img id="image-preview" src="#" alt="Vista previa" style="display: none;">
+        </div>
+
+        {% if receta %}
+        <div class="recipe-card" id="recipe-content">
+            <h2>Receta Generada</h2>
+
+            {% if ingredientes %}
+            <div class="recipe-section">
+                <h3>Ingredientes</h3>
+                <ul>
+                    {% for item in ingredientes %}
+                        <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if pasos %}
+            <div class="recipe-section">
+                <h3>Pasos de preparación</h3>
+                <ol>
+                    {% for paso in pasos %}
+                        <li>{{ paso }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+            {% endif %}
+
+            <div style="text-align: right; margin-top: 20px;">
+                <button id="export-pdf">📄 Exportar como PDF</button>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <footer>
+        <p>✨ Desarrollado con amor y verduras | <strong>RecetIA</strong> 2025 ©</p>
+    </footer>
+
+    <!-- JS Final -->
+    <script>
+        const fileInput = document.getElementById('file-input');
+        const preview = document.getElementById('image-preview');
+
+        fileInput.onchange = () => {
+            const file = fileInput.files[0];
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+                preview.style.display = 'block';
+            }
+        };
+
+        const exportBtn = document.getElementById('export-pdf');
+        if (exportBtn) {
+            exportBtn.onclick = async () => {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                // 🎨 Portada limpia y centrada
+                doc.setFillColor(255, 247, 233); // fondo pastel
+                doc.rect(0, 0, 210, 297, 'F'); // A4 completo
+
+                doc.setFont("Helvetica", "bold");
+                doc.setFontSize(22);
+                doc.setTextColor(255, 123, 84);
+                doc.text("Receta Generada con RecetIA", 20, 50);
+
+                doc.setFont("Helvetica", "normal");
+                doc.setFontSize(14);
+                doc.setTextColor(60, 60, 60);
+                const fecha = new Date().toLocaleDateString();
+                doc.text(`Fecha: ${fecha}`, 20, 70);
+
+                doc.text("Desarrollado por: Wilder Manzano + IA", 20, 85);
+
+                doc.setFontSize(12);
+                doc.setTextColor(100, 100, 100);
+                doc.text("Esta receta fue generada automáticamente usando una imagen de ingredientes.", 20, 100);
+
+                doc.addPage();
+
+                // 📸 Captura del contenido visual renderizado
+                const content = document.getElementById('recipe-content');
+                const canvas = await html2canvas(content, { scale: 2 });
+
+                const imgData = canvas.toDataURL('image/png');
+                const imgProps = doc.getImageProperties(imgData);
+                const pdfWidth = doc.internal.pageSize.getWidth() - 30;
+                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+                doc.addImage(imgData, 'PNG', 15, 20, pdfWidth, pdfHeight);
+                doc.save("receta_recetIA.pdf");
+            };
+        }
+    </script>
+</body>
+</html>
+
